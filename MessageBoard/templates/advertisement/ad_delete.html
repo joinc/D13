@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Удаление объявления - {{ block.super }}
+{% endblock title %}
+
+{% block content %}
+    <nav class="my-3" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'ads_list' %}">Главная</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'ad_detail' ad.id %}">{{ ad.title }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Удаление объявления</li>
+        </ol>
+    </nav>
+    <div class="shadow card border-dark mb-4">
+        <div class="card-header text-center">
+                {{ question }}
+                <div class="row align-items-center">
+                    <div class="col-auto me-auto">
+
+                    </div>
+                    <div class="col-auto">
+                        <div class="small text-end">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ ad.title }}</h5>
+            <div class="card-text">{{ ad.content|safe }}</div>
+        </div>
+        <div class="card-footer">
+            <div class="row align-items-center">
+                <div class="col-auto me-auto">
+                    Объявление от <strong class="text-gray-dark">{% firstof ad.author.get_full_name ad.author.get_short_name ad.author.get_username %}</strong> в кагории {{ ad.get_category_display }}
+                    <span class="d-block">{{ ad.create_date }}</span>
+                </div>
+                <div class="col-auto">
+                    {% if ad.author == request.user %}
+                        <a href="{% url 'ad_detail' pk=ad.id %}" type="button" class="btn btn-outline-secondary">Не удалять</a>
+                    <a href="{% url 'ad_del_confirm' pk=ad.id %}" type="button" class="btn btn-outline-danger">Удалить</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}
+    {{ ad.title }} - {{ block.super }}
+{% endblock title %}
+
+{% block content %}
+    <nav class="my-3" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'ads_list' %}">Главная</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ ad.title }}</li>
+        </ol>
+    </nav>
+    <div class="shadow card border-dark mb-4">
+        <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col-auto me-auto">
+                        Объявление от <strong class="text-gray-dark">{% firstof ad.author.get_full_name ad.author.get_short_name ad.author.get_username %}</strong> в кагории {{ ad.get_category_display }}
+                    </div>
+                    <div class="col-auto">
+                        <div class="small text-end">
+                            <strong class="text-gray-dark">{{ ad.author }}</strong>
+                            <span class="d-block">{{ ad.create_date }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ ad.title }}</h5>
+            <div class="card-text">{{ ad.content|safe }}</div>
+        </div>
+        <div class="card-footer">
+            <div class="row align-items-center">
+                <div class="col-auto me-auto">
+                    Откликов на это объявление: {{ ad.Advertisement_Comment.count }}
+                </div>
+                <div class="col-auto">
+                    {% if ad.author == request.user %}
+                        <a href="{% url 'ad_del_ask' pk=ad.id %}" type="button" class="btn btn-outline-danger">
+                            Удалить
+                        </a>
+                        <a href="{% url 'ad_update' pk=ad.id %}" type="button" class="btn btn-outline-secondary">
+                            Редактировать
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if user.is_authenticated %}
+        {% if ad.author != request.user and not current_user_left_reply %}
+            <form action="" method="POST" align="center">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div class="mb-3">
+                    {{ form.text.errors }}
+                    <h5>Оставить отклик:</h5>
+                    {{ form.text|add_class:"form-control" }}
+                    <button class="btn btn-primary my-3" type="submit">Отправить</button>
+                </div>
+            </form>
+        {% endif %}
+    {% endif %}
+    {% for repl in ad.Advertisement_Comment.all %}
+        <h5>Отклики:</h5>
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="card-text">{{ repl.text }}</div>
+            </div>
+            <div class="card-footer">
+                <div class="row align-items-center">
+                    <div class="col-auto me-auto">
+                        Отклик пользователя <strong class="text-gray-dark">{{ repl.author }}</strong>
+                        <span class="d-block">{{ repl.create_date }}</span>
+                    </div>
+                    <div class="col-auto">
+                        {% if repl.author == request.user %}
+                            {% if repl.is_approved %}
+                                Ваш отклик одобрен.
+                            {% elif repl.is_rejected %}
+                                Ваш отклик отклонен.
+                            {% else %}
+                                Ваш отклик пока находится в нейтральном статусе.
+                            {% endif %}
+                            <a href="{% url 'repl_del_ask' pk=ad.id repl_pk=repl.id %}" class="btn btn-danger">
+                                Удалите этот отклик
+                            </a>
+                        {% endif %}
+                        {% if ad.author == request.user %}
+                            {% if not repl.is_approved and not repl.is_rejected %}
+                                <a href="{% url 'repl_apr_and_disapr' pk=ad.id repl_pk=repl.id %}" class="btn btn-success">
+                                    Одобрить
+                                </a>
+                                <a href="{% url 'repl_rej_and_unrej' pk=ad.id repl_pk=repl.id %}" class="btn btn-dark">
+                                    Отклонить
+                                </a>
+                            {% elif repl.is_approved and not repl.is_rejected %}
+                                <a href="{% url 'repl_apr_and_disapr' pk=ad.id repl_pk=repl.id %}" class="btn btn-outline-success">
+                                    Не одобрять
+                                </a>
+                                <a href="{% url 'repl_rej_and_unrej' pk=ad.id repl_pk=repl.id %}" class="btn btn-dark">
+                                    Отклонить
+                                </a>
+                            {% elif not repl.is_approved and repl.is_rejected %}
+                                <a href="{% url 'repl_apr_and_disapr' pk=ad.id repl_pk=repl.id %}" class="btn btn-success">
+                                    Одобрить
+                                </a>
+                                <a href="{% url 'repl_rej_and_unrej' pk=ad.id repl_pk=repl.id %}" class="btn btn-outline-dark">
+                                    Не отвергать
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock content %}

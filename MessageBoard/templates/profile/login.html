@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Вход в систему - {{ block.super }}
+{% endblock title %}
+
+{% block content %}
+    <main class="form-signin w-50 m-auto">
+        {% include 'messages.html' %}
+        <form method="post" action="{% url 'login' %}" class="py-3">
+            {% csrf_token %}
+            <h3 class="mb-3 fw-normal text-center">Пожалуйста войдите:</h3>
+            <div class="py-2">
+                <p class="mb-2">Логин:</p>
+                <input type="text" name="username" class="form-control">
+            </div>
+            <div class="py-2">
+                <p class="mb-2">Пароль:</p>
+                <input type="password" name="password" class="form-control">
+            </div>
+            <button class="btn btn-primary w-100 py-2" type="submit">Войти</button>
+        </form>
+        <h5>У Вас нет учетной записи?</h5>
+        <a class="btn btn-secondary w-100 py-2" href="{% url 'account_register' %}">Зарегистрироваться</a>
+    </main>
+{% endblock content %}

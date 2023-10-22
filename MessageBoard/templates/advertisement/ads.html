@@ -1,0 +1,41 @@
+    {% for ad in list_ads %}
+        <div class="shadow card border-dark mb-4">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col-auto me-auto">
+                        Объявление от <strong class="text-gray-dark">{% firstof ad.author.get_full_name ad.author.get_short_name ad.author.get_username %}</strong> в кагории {{ ad.get_category_display }}
+                    </div>
+                    <div class="col-auto">
+                        <div class="small text-end">
+                            <strong class="text-gray-dark">{{ ad.author }}</strong>
+                            <span class="d-block">{{ ad.create_date }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">
+                    {{ ad.title }}
+                </h5>
+            </div>
+            <div class="card-footer">
+                <div class="row align-items-center">
+                    <div class="col-auto me-auto">
+                        Откликов на это объявление: {{ ad.Advertisement_Comment.count }}
+                    </div>
+                    <div class="col-auto">
+                        <a href="{% url 'ad_detail' ad.id %}" class="icon-link icon-link-hover ">
+                            Читать полность
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <h2>
+            Объявления отсутствуют.
+        </h2>
+    {% endfor %}

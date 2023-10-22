@@ -1,0 +1,12 @@
+    <form action="" method="get" class="row gy-2 gx-3 mb-3 align-items-center">
+        {% csrf_token %}
+        {% for field in filterset.form %}
+            <div class="col-auto">
+                <label>{{ field.label }}</label>
+                {{ field }}
+            </div>
+        {% endfor %}
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Поиск</button>
+        </div>
+    </form>

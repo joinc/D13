@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}
+    Регистрация - {{ block.super }}
+{% endblock title %}
+
+{% block content %}
+    <main class="form-signin w-50 m-auto">
+        <h5 style="background-color: powderblue">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </h5>
+        <form method="post" action="" class="py-3">
+            {% csrf_token %}
+            <h3 class="mb-3 fw-normal text-center">Создать учетную запись:</h3>
+            {{ reg_form.non_field_errors }}
+            {% for field in reg_form %}
+                <div class="py-2">
+                    <p class="mb-2">{{ field.label_tag }}</p>
+                    {{ field|add_class:"form-control" }}
+                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                </div>
+            {% endfor %}
+            <button class="btn btn-primary w-100 my-3" type="submit">Зарегистрироваться</button>
+        </form>
+        <h5>У Вас есть учетная запись?</h5>
+        <a class="btn btn-secondary w-100 py-2" href="{% url 'login' %}">Войти</a>
+
+    </main>
+{% endblock content %}

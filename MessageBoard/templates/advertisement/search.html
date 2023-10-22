@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load AdsBoard_filters %}
+{% load AdsBoard_tags %}
+
+{% block title %}
+    Поиск объявлений - {{ block.super }}
+{% endblock title %}
+
+{% block content %}
+    <nav class="my-3" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'ads_list' %}">Главная</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Поиск объявлений</li>
+        </ol>
+    </nav>
+    {% include 'advertisement/filter.html' %}
+    {% include 'advertisement/ads.html' %}
+    {% include 'paginator.html' %}
+{% endblock content %}

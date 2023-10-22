@@ -1,0 +1,7 @@
+.env
+.idea/
+venv/
+D13/__pycache__/
+MessageBoard/__pycache__/
+MessageBoard/migrations/
+MessageBoard/templatetags/__pycache__/
